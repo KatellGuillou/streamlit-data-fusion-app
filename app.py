@@ -16,7 +16,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
+# Modern CSS styling
 st.markdown("""
 <style>
     .main-header {
@@ -27,11 +27,41 @@ st.markdown("""
         margin-bottom: 2rem;
     }
     .section-header {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
         font-weight: bold;
         color: #2c3e50;
         margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    .upload-section {
+        background-color: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 10px;
+        padding: 2rem;
+        margin: 1rem 0;
+        text-align: center;
+    }
+    .upload-title {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+    .upload-subtitle {
+        color: #6c757d;
         margin-bottom: 1rem;
+    }
+    .step-number {
+        background-color: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 10px;
     }
     .success-message {
         background-color: #d4edda;
@@ -47,6 +77,13 @@ st.markdown("""
         color: #004085;
         padding: 1rem;
         border-radius: 0.25rem;
+        margin: 1rem 0;
+    }
+    .file-info {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 1rem;
         margin: 1rem 0;
     }
 </style>
@@ -113,18 +150,22 @@ def main():
         )
         
         include_geojson = st.checkbox("Generate GeoJSON Output", value=True)
-        
-    # Main content area
+    
+    # Main content area with modern interface
+    st.markdown('<div class="section-header">📊 Data Upload</div>', unsafe_allow_html=True)
+    
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.markdown('<div class="section-header">📊 BMS Data Upload</div>', unsafe_allow_html=True)
+        st.markdown("### 📊 Data Upload")
+        st.markdown("**Upload BMS CSV File:**")
         
         bms_file = st.file_uploader(
             "Upload BMS CSV File:",
             type=['csv'],
             key="bms_uploader",
-            help="Upload your BMS (Battery Management System) data file"
+            help="Upload your BMS (Battery Management System) data file",
+            label_visibility="collapsed"
         )
         
         if bms_file is not None:
@@ -142,16 +183,18 @@ def main():
                 bms_df = None
         else:
             bms_df = None
-            st.info("📁 Please upload a BMS CSV file")
+            st.info("📁 Please upload a CSV file")
     
     with col2:
-        st.markdown('<div class="section-header">🛣️ Road Data Upload</div>', unsafe_allow_html=True)
+        st.markdown("### 🛣️ Road Data Upload")
+        st.markdown("**Upload Road CSV File:**")
         
         road_file = st.file_uploader(
             "Upload Road CSV File:",
             type=['csv'],
             key="road_uploader",
-            help="Upload your road data file"
+            help="Upload your road data file",
+            label_visibility="collapsed"
         )
         
         if road_file is not None:
@@ -169,7 +212,7 @@ def main():
                 road_df = None
         else:
             road_df = None
-            st.info("📁 Please upload a Road CSV file")
+            st.info("📁 Please upload a CSV file")
     
     # Data Processing Section
     if bms_df is not None and road_df is not None:
