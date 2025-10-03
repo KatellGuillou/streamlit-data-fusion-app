@@ -16,7 +16,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Modern CSS styling
+# Modern CSS styling to match the design
 st.markdown("""
 <style>
     .main-header {
@@ -24,7 +24,19 @@ st.markdown("""
         font-weight: bold;
         color: #1f77b4;
         text-align: center;
+        margin-bottom: 1rem;
+    }
+    .via-fusion-tag {
+        background-color: #ff6b35;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        display: inline-block;
         margin-bottom: 2rem;
+        text-align: center;
+        width: 100%;
     }
     .section-header {
         font-size: 1.8rem;
@@ -51,17 +63,49 @@ st.markdown("""
         color: #6c757d;
         margin-bottom: 1rem;
     }
-    .step-number {
-        background-color: #dc3545;
-        color: white;
-        border-radius: 50%;
-        width: 25px;
-        height: 25px;
-        display: inline-flex;
-        align-items: center;
+    .file-upload-area {
+        background-color: #f8f9fa;
+        border: 2px dashed #dee2e6;
+        border-radius: 8px;
+        padding: 2rem;
+        margin: 1rem 0;
+        text-align: center;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
         justify-content: center;
-        font-weight: bold;
-        margin-right: 10px;
+        align-items: center;
+    }
+    .upload-icon {
+        font-size: 2rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+    .upload-text {
+        color: #495057;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+    .upload-limit {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    .browse-button {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        margin-top: 1rem;
+    }
+    .file-info-box {
+        background-color: #e7f3ff;
+        border: 1px solid #b3d9ff;
+        color: #004085;
+        padding: 1rem;
+        border-radius: 5px;
+        margin: 1rem 0;
+        text-align: center;
     }
     .success-message {
         background-color: #d4edda;
@@ -79,19 +123,28 @@ st.markdown("""
         border-radius: 0.25rem;
         margin: 1rem 0;
     }
-    .file-info {
+    .footer {
+        text-align: center;
+        color: #666;
+        margin-top: 2rem;
+        padding: 1rem;
+        border-top: 1px solid #dee2e6;
+    }
+    .metric-card {
         background-color: #f8f9fa;
         border: 1px solid #dee2e6;
-        border-radius: 5px;
+        border-radius: 8px;
         padding: 1rem;
-        margin: 1rem 0;
+        text-align: center;
+        margin: 0.5rem 0;
     }
 </style>
 """, unsafe_allow_html=True)
 
 def main():
-    # Main header
+    # Main header with Via Fusion tag
     st.markdown('<div class="main-header">🔗 Data Fusion Application</div>', unsafe_allow_html=True)
+    st.markdown('<div class="via-fusion-tag">Via Fusion</div>', unsafe_allow_html=True)
     
     # Sidebar for configuration
     with st.sidebar:
@@ -158,7 +211,16 @@ def main():
     
     with col1:
         st.markdown("### 📊 Data Upload")
-        st.markdown("**Upload BMS CSV File:**")
+        st.markdown("**Upload** CSV **File:**")
+        
+        # Custom upload area
+        st.markdown("""
+        <div class="file-upload-area">
+            <div class="upload-icon">☁️</div>
+            <div class="upload-text">Drag and drop file here</div>
+            <div class="upload-limit">Limit 200MB per file • CSV</div>
+        </div>
+        """, unsafe_allow_html=True)
         
         bms_file = st.file_uploader(
             "Upload BMS CSV File:",
@@ -183,11 +245,20 @@ def main():
                 bms_df = None
         else:
             bms_df = None
-            st.info("📁 Please upload a CSV file")
+            st.markdown('<div class="file-info-box">📁 Please upload a CSV file</div>', unsafe_allow_html=True)
     
     with col2:
         st.markdown("### 🛣️ Road Data Upload")
-        st.markdown("**Upload Road CSV File:**")
+        st.markdown("**Upload** CSV **File:**")
+        
+        # Custom upload area
+        st.markdown("""
+        <div class="file-upload-area">
+            <div class="upload-icon">☁️</div>
+            <div class="upload-text">Drag and drop file here</div>
+            <div class="upload-limit">Limit 200MB per file • CSV</div>
+        </div>
+        """, unsafe_allow_html=True)
         
         road_file = st.file_uploader(
             "Upload Road CSV File:",
@@ -212,20 +283,35 @@ def main():
                 road_df = None
         else:
             road_df = None
-            st.info("📁 Please upload a CSV file")
+            st.markdown('<div class="file-info-box">📁 Please upload a CSV file</div>', unsafe_allow_html=True)
     
     # Data Processing Section
     if bms_df is not None and road_df is not None:
         st.markdown('<div class="section-header">🔄 Data Processing</div>', unsafe_allow_html=True)
         
-        # Show data info
+        # Show data info in cards
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric("BMS Records", len(bms_df))
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3>BMS Records</h3>
+                <h2 style="color: #1f77b4;">{len(bms_df)}</h2>
+            </div>
+            """, unsafe_allow_html=True)
         with col2:
-            st.metric("Road Records", len(road_df))
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3>Road Records</h3>
+                <h2 style="color: #1f77b4;">{len(road_df)}</h2>
+            </div>
+            """, unsafe_allow_html=True)
         with col3:
-            st.metric("Scope", scope_number)
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3>Scope</h3>
+                <h2 style="color: #1f77b4;">{scope_number}</h2>
+            </div>
+            """, unsafe_allow_html=True)
         
         # Find common columns for merging
         common_columns = set(bms_df.columns) & set(road_df.columns)
@@ -280,16 +366,36 @@ def main():
         
         merged_df = st.session_state['merged_data']
         
-        # Show results summary
+        # Show results summary in cards
         col1, col2, col3, col4 = st.columns(4)
         with col1:
-            st.metric("Total Records", len(merged_df))
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3>Total Records</h3>
+                <h2 style="color: #1f77b4;">{len(merged_df)}</h2>
+            </div>
+            """, unsafe_allow_html=True)
         with col2:
-            st.metric("Total Columns", len(merged_df.columns))
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3>Total Columns</h3>
+                <h2 style="color: #1f77b4;">{len(merged_df.columns)}</h2>
+            </div>
+            """, unsafe_allow_html=True)
         with col3:
-            st.metric("BMS Records", len(merged_df[merged_df['data_source'] == 'BMS']))
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3>BMS Records</h3>
+                <h2 style="color: #1f77b4;">{len(merged_df[merged_df['data_source'] == 'BMS'])}</h2>
+            </div>
+            """, unsafe_allow_html=True)
         with col4:
-            st.metric("Road Records", len(merged_df[merged_df['data_source'] == 'Road']))
+            st.markdown(f"""
+            <div class="metric-card">
+                <h3>Road Records</h3>
+                <h2 style="color: #1f77b4;">{len(merged_df[merged_df['data_source'] == 'Road'])}</h2>
+            </div>
+            """, unsafe_allow_html=True)
         
         # Show merged data preview
         with st.expander("🔍 Merged Data Preview"):
@@ -331,13 +437,12 @@ def main():
                     st.info("💡 GeoJSON creation requires coordinate columns (lat, lon or latitude, longitude)")
     
     # Footer
-    st.markdown("---")
-    st.markdown("""
-    <div style="text-align: center; color: #666; margin-top: 2rem;">
+    st.markdown(f"""
+    <div class="footer">
         <p>🔗 Data Fusion Application | Built with Streamlit</p>
-        <p>Scope: {scope} | Date: {date}</p>
+        <p>Scope: {scope_number} | Date: {selected_date}</p>
     </div>
-    """.format(scope=scope_number, date=selected_date), unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 def create_geojson_from_data(df, scope_number):
     """Create GeoJSON from DataFrame with coordinate columns"""
